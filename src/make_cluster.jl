@@ -9,4 +9,5 @@ run(`cat $path_to_test_si`)
 run(`cp $path_to_test_si si-copy.out`)
 run(`createXSF si-copy.out si.xsf `)
 run(`open si.xsf`)
+run(`rm si-copy.out`)
 end
