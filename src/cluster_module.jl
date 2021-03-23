@@ -1,5 +1,6 @@
 module cluster_module
-export greet
-greet() = print("Hello World!")
+
+include("make_cluster.jl")
+export make_xsf
 
 end # module
