@@ -1,0 +1,4 @@
+name = "cluster_module"
+uuid = "739d8b47-37ef-4f4d-be45-fc32f9aaf4c6"
+authors = ["Ali Ghorashi <aligho@mit.edu>"]
+version = "0.1.0"
