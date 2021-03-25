@@ -10,7 +10,7 @@ struct branchcluster<:cluster
     atoms::Array{<:Array{<:Any, 1}}
 end
 
-function make_xsf(ionpos::Array{<:Array{<:Any, 1}, 1}; lattice::Array{<:Any, 2} = [20 0 0 "\\"; 0 20 0 "\\"; 0 0 20 "\\"])
+function make_xsf(ionpos::Array{<:Array{<:Any, 1}, 1}; lattice::Array{<:Any, 2} = [40 0 0 "\\"; 0 40 0 "\\"; 0 0 40 "\\"])
     print("making xsf")
     open("temp.in", "w") do io
         write(io, "ion-species GBRV/\$ID_pbesol.uspp")
@@ -95,15 +95,18 @@ function move_cluster(central_cluster::Array{<:Any}, new_cluster::Array{<:Any}, 
     return new_cluster1
 end
 
-function make_arbitrary_cluster(middle_atom::AbstractString, linked_atom::AbstractString, num_links::Int, θ::Real, d::Real; translation::Real=3)
+function make_arbitrary_cluster(middle_atom::AbstractString, linked_atom::AbstractString, num_links::Int, θ::Real, d::Real; translation::Real=3, θₓ::Real=0, θ₂::Real=0)
 
-    first_pos = ["ion", middle_atom, 0, 0, -translation, 1]  
+    additional_rotationx = [1 0 0; 0 cos(θₓ) -sin(θₓ); 0 sin(θₓ) cos(θₓ)  ]
+    additional_rotation2 = [cos(θ₂) 0 sin(θ₂); 0 1 0; -sin(θ₂) 0 cos(θ₂)  ]
+
+    first_pos = ["ion", middle_atom, (additional_rotation2*additional_rotationx*[0, 0, -translation])..., 1]  
     linked_pos = Array{Array{Any, 1}, 1}(undef, num_links+1)
     rotation_mat = [cos(2π/num_links) sin(2π/num_links) 0 ; - sin(2π/num_links) cos(2π/num_links) 0; 0 0 1]
     generate_pos =  [d*sin(π-θ), 0, -d*cos(π-θ)-translation]
     linked_pos[1] = first_pos
     for n in 0:num_links-1
-        linked_pos[n+2] =["ion", linked_atom, (rotation_mat^n)*generate_pos..., 1]
+        linked_pos[n+2] =["ion", linked_atom, (additional_rotation2*additional_rotationx*((rotation_mat^n)*generate_pos))..., 1]
     end
     return linked_pos
 
