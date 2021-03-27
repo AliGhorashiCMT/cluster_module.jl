@@ -10,6 +10,34 @@ mutable struct branchcluster<:cluster
     branch_atoms::Vector{<:Tuple{<:AbstractString, <:Vector{<:Real}}}
 end
 
+"String macro to easily make central clusters"
+macro cc_str(p)
+    stringed_p = string.(split(p))
+    if length(stringed_p) < 5
+        error("Incorrect usage of cc string macro")
+    end
+    return make_central_type(stringed_p[1:2]..., parse(Int, stringed_p[3]), parse.(Float64, stringed_p[4:5])...)
+end
+
+"String macro to easily make branch clusters"
+macro bc_str(p)
+    stringed_p = string.(split(p))
+    if length(stringed_p) < 5
+        error("Incorrect usage of bc string macro")
+    end
+    translation = 0
+    θ₁ = 0 
+    θ₂ = 0
+    try
+        translation = parse(Float64, stringed_p[6])
+        θ₁ = parse(Float64, stringed_p[7])
+        θ₂ = parse(Float64, stringed_p[8])
+    catch(BoundsError)
+
+    end
+    return make_branch_type(stringed_p[1:2]..., parse(Int, stringed_p[3]), parse.(Float64, stringed_p[4:5])..., translation=translation, θ₁=θ₁, θ₂=θ₂)
+end
+
 function make_central_type(middle_atom::AbstractString, linked_atom::AbstractString, num_links::Int, θ::Real, d::Real, Radian::Bool=false)
 
     if Radian == false ##Check if angles given in radian or not 

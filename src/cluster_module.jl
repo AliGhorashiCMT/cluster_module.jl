@@ -10,6 +10,6 @@ export cluster, centralcluster, branchcluster
 
 
 include("cluster_types.jl")
-export make_central_type, make_branch_type, move_branch, make_new_central
+export make_central_type, make_branch_type, move_branch, make_new_central, @cc_str, @bc_str
 
 end # module
