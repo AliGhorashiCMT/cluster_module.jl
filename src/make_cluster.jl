@@ -30,6 +30,21 @@ function make_xsf(ionpos::Array{<:Array{<:Any, 1}, 1}; lattice::Array{<:Any, 2} 
     run(`open temp.xsf`)
 end
 
+function run_jdftx(;filename::AbstractString="temp.in", parallel::Bool=false)
+    if parallel 
+        run(pipeline(`mpirun -n 4 jdftx -i $(filename)`,  `tee $(filename[1:end-3]*".out")` ))  
+    else 
+        run(pipeline(`jdftx -i $(filename)`,  `tee $(filename[1:end-3]*".out")` ))  
+    end
+end
+
+function run_jdftx_ni(;filename::AbstractString="temp.in", parallel::Bool=false)
+    if parallel 
+        run(pipeline(`mpirun -n 4 jdftx -ni $(filename)`,  `tee $(filename[1:end-3]*".out")` ))  
+    else
+        run(pipeline(`jdftx -ni $(filename)`,  `tee $(filename[1:end-3]*".out")` ))  
+    end
+end
 
 function make_xsf(ionpos::Any, lattice::Array{<:Any, 2} = [20 0 0 "\\"; 0 20 0 "\\"; 0 0 20 "\\"])
     open("temp.in", "w") do io
@@ -78,6 +93,10 @@ function attach_cluster(central_cluster::Any, branch_clusters::Array{<:Any}, spl
         push!(complete_cluster, move_cluster(central_cluster, branch_clusters[i], split_points[i] )...)
     end
     return complete_cluster
+end
+
+function attach_clusters(central_cluster::Any, branch_cluster::Array{Array{Any,1},1}, split_points::Vector{Int})
+    return attach_cluster(central_cluster, repeat(branch_cluster, length(split_points)), split_points)
 end
 
 function move_cluster(central_cluster::Array{<:Any}, new_cluster::Array{<:Any}, which_atom::Int)
