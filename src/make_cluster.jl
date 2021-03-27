@@ -1,15 +1,4 @@
 
-abstract type cluster end 
-
-struct centralcluster<:cluster
-    central_atom::Array{<:Any, 1}
-    branch_atoms::Array{<:Array{<:Any, 1}}
-end
-
-struct branchcluster<:cluster
-    atoms::Array{<:Array{<:Any, 1}}
-end
-
 function make_xsf(ionpos::Array{<:Array{<:Any, 1}, 1}; lattice::Array{<:Any, 2} = [40 0 0 "\\"; 0 40 0 "\\"; 0 0 40 "\\"])
     print("making xsf")
     open("temp.in", "w") do io
@@ -83,7 +72,21 @@ function find_α_θ(rotated_vector::Vector{<:Any})
     if (sin(α)*cos(θ) ≈ normalized_vector[2]) == false
         α = -α; θ = -θ
     end
+    if isequal(α, NaN)
+        α = 0 
+    end
+
+    if isequal(θ, NaN)
+        θ = 0 
+    end
+
+    rotation_mat = [ cos(θ) -sin(θ)cos(α) sin(α)sin(θ); sin(θ) cos(θ)cos(α) -sin(α)cos(θ); 0 sin(α) cos(α)]
+
+    if (rotation_mat*[0, 0, -1] ≈ normalized_vector) == false ##Throws an error if for some reason the rotation did something unexpected
+        error("find_α_β didn't move cluster correctly")
+    end
     return α, θ
+
 end
 
 function attach_cluster(central_cluster::Any, branch_clusters::Array{<:Any}, split_points::Vector{Int})
