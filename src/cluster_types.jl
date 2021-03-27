@@ -110,13 +110,27 @@ function Base.length(central_cluster::centralcluster)
     return length(central_cluster.branch_atoms) + 1
 end
 
+function Base.show(io::IO, central_cluster::centralcluster )
+    println(io, "Central atom is: $(central_cluster.central_atom[1])  at coordinate $(round.(central_cluster.central_atom[2]))" )
+    for atom in central_cluster.branch_atoms
+        println(io, "Branch atom: $(atom[1])  ", "at coordinate   $(round.(atom[2], digits=3))")
+    end
+end
+
+function Base.show(io::IO, branch_cluster::branchcluster)
+    println(io, "Split off atom is: $(branch_cluster.split_off_atom[1])  at coordinate $(round.(branch_cluster.split_off_atom[2]))" )
+    for atom in branch_cluster.branch_atoms
+        println(io, "Branch atom: $(atom[1])  ", "at coordinate   $(round.(atom[2], digits=3))")
+    end
+
+end
+
 function make_new_central(old_central::centralcluster, branch_cluster::branchcluster, where_attach::Vector{Int})
     for (index, atom) in enumerate(where_attach)
         old_central = append!(old_central, move_branch(old_central, branch_cluster, atom))
     end
     return old_central
 end
-
 
 function make_xsf(cluster::centralcluster; lattice::Array{<:Any, 2} = [40 0 0 "\\"; 0 40 0 "\\"; 0 0 40 "\\"])
     ##Convert to expected JDFTX ionpos format
