@@ -5,7 +5,8 @@ function make_xsf(ionpos::Array{<:Array{<:Any, 1}, 1}; lattice::Array{<:Any, 2} 
         write(io, "ion-species GBRV/\$ID_pbesol.uspp")
         writedlm(io, "  ")
         write(io, "core-overlap-check none")
-
+        write(io, "  ")
+        writedlm(io, "coulomb-interaction Isolated")
         writedlm(io, "  ")
         write(io, "coords-type Cartesian")
         writedlm(io, "  ")

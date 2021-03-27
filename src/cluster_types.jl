@@ -62,21 +62,19 @@ function move_branch(central_cluster::centralcluster, branch_cluster::branchclus
 
     ##Returns the moved branch with respect to the central cluster
 
-    coord_new_center = central_cluster.branch_atoms[which_atom-1][2]
+    coord_new_center = central_cluster.branch_atoms[which_atom-1][2];
     
-    d = sqrt(sum(coord_new_center.^2))
-    α, θ = find_α_θ(coord_new_center)
+    d = sqrt(sum(coord_new_center.^2));
+    α, θ = find_α_θ(coord_new_center);
 
-    rotation_mat = [ cos(θ) -sin(θ)cos(α) sin(α)sin(θ); sin(θ) cos(θ)cos(α) -sin(α)cos(θ); 0 sin(α) cos(α)]
-    moved_branch_ids = Vector{Tuple{AbstractString, Vector{Real}}}()
+    rotation_mat = [ cos(θ) -sin(θ)cos(α) sin(α)sin(θ); sin(θ) cos(θ)cos(α) -sin(α)cos(θ); 0 sin(α) cos(α)];
+    moved_branch_ids = Vector{Tuple{AbstractString, Vector{Real}}}();
 
     for atom_id in branch_cluster.branch_atoms
         push!(moved_branch_ids,  (atom_id[1], [(rotation_mat*(atom_id[2]-[0, 0, d])...)]  ) )
     end
 
     new_split_off_atom = (branch_cluster.split_off_atom[1], rotation_mat*(branch_cluster.split_off_atom[2]-[0, 0, d]))
-    print(new_split_off_atom)
-    print(moved_branch_ids)
     return branchcluster(new_split_off_atom, moved_branch_ids)
 
 end
@@ -115,6 +113,7 @@ function Base.show(io::IO, central_cluster::centralcluster )
     for atom in central_cluster.branch_atoms
         println(io, "Branch atom: $(atom[1])  ", "at coordinate   $(round.(atom[2], digits=3))")
     end
+    println("\n\n Total Atoms: $(length(central_cluster))")
 end
 
 function Base.show(io::IO, branch_cluster::branchcluster)
@@ -122,14 +121,15 @@ function Base.show(io::IO, branch_cluster::branchcluster)
     for atom in branch_cluster.branch_atoms
         println(io, "Branch atom: $(atom[1])  ", "at coordinate   $(round.(atom[2], digits=3))")
     end
+    println("\n\n Total atoms: $(length(branch_cluster))")
 
 end
 
 function make_new_central(old_central::centralcluster, branch_cluster::branchcluster, where_attach::Vector{Int})
     for (index, atom) in enumerate(where_attach)
-        old_central = append!(old_central, move_branch(old_central, branch_cluster, atom))
+        old_central = append!(old_central, move_branch(old_central, branch_cluster, atom));
     end
-    return old_central
+    return old_central;
 end
 
 function make_xsf(cluster::centralcluster; lattice::Array{<:Any, 2} = [40 0 0 "\\"; 0 40 0 "\\"; 0 0 40 "\\"])
