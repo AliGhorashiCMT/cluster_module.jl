@@ -2,6 +2,7 @@ module cluster_module
 
 using DelimitedFiles
 
+import Base: + 
 include("make_cluster.jl")
 export make_xsf
 export make_test_xsf, find_α_θ

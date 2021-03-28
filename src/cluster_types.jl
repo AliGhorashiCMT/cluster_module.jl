@@ -2,13 +2,16 @@ abstract type cluster end
 
 mutable struct centralcluster<:cluster
     central_atom::Tuple{<:AbstractString, <:Vector{<:Real}}
-    branch_atoms::Vector{<:Tuple{<:AbstractString, <:Vector{<:Real}}}
+    branch_atoms::Union{Nothing, Vector{<:Tuple{<:AbstractString, <:Vector{<:Real}}}}
 end
 
 mutable struct branchcluster<:cluster
     split_off_atom::Tuple{<:AbstractString, <:Vector{<:Real}}
-    branch_atoms::Vector{<:Tuple{<:AbstractString, <:Vector{<:Real}}}
+    branch_atoms::Union{Nothing, Vector{<:Tuple{<:AbstractString, <:Vector{<:Real}}}} #We can also make a branch that is just one atom
 end
+
+centralcluster(central_atom::Tuple{<:AbstractString, <:Vector{<:Real}}) = centralcluster(central_atom, nothing)
+branchcluster(central_atom::Tuple{<:AbstractString, <:Vector{<:Real}}) = branchcluster(central_atom, nothing)
 
 "String macro to easily make central clusters"
 macro cc_str(p)
@@ -128,6 +131,26 @@ function Base.append!(branch_cluster::branchcluster, central_cluster::centralclu
     return centralcluster(temp_central.central_atom, append!(temp_branch.branch_atoms, append!(temp_central.branch_atoms, [temp_branch.split_off_atom])))
 end
 
+function Base.append!(a::Nothing, b::Any) #To prevent errors when appending central clusters with no branch atoms
+    return b
+end
+
+function Base.append!(b::Any, a::Nothing ) #To prevent errors when appending central clusters with no branch atoms
+    return b
+end
+
+function Base.copy(a::Nothing)
+    return nothing
+end
+
+function +(central_cluster::centralcluster, branch_cluster::branchcluster)
+    return append!(central_cluster, branch_cluster)
+end
+
+function +(branch_cluster::branchcluster, central_cluster::centralcluster)
+    return append!(central_cluster, branch_cluster)
+end
+
 function Base.length(branch_cluster::branchcluster)
     return length(branch_cluster.branch_atoms) + 1
 end
@@ -136,18 +159,26 @@ function Base.length(central_cluster::centralcluster)
     return length(central_cluster.branch_atoms) + 1
 end
 
+function Base.length(a::Nothing) ## To prevent errors in other length methods
+    return 0 
+end
+
 function Base.show(io::IO, central_cluster::centralcluster )
-    println(io, "Central atom is: $(central_cluster.central_atom[1])  at coordinate $(round.(central_cluster.central_atom[2]))" )
-    for atom in central_cluster.branch_atoms
-        println(io, "Branch atom: $(atom[1])  ", "at coordinate   $(round.(atom[2], digits=3))")
+    println(io, "Central atom is: $(central_cluster.central_atom[1])  at coordinate $(round.(central_cluster.central_atom[2], digits=3))" )
+    if isa(central_cluster.branch_atoms, Nothing) == false
+        for atom in central_cluster.branch_atoms
+            println(io, "Branch atom: $(atom[1])  ", "at coordinate   $(round.(atom[2], digits=3))")
+        end
     end
     println("\n\n Total Atoms: $(length(central_cluster))")
 end
 
 function Base.show(io::IO, branch_cluster::branchcluster)
-    println(io, "Split off atom is: $(branch_cluster.split_off_atom[1])  at coordinate $(round.(branch_cluster.split_off_atom[2]))" )
-    for atom in branch_cluster.branch_atoms
-        println(io, "Branch atom: $(atom[1])  ", "at coordinate   $(round.(atom[2], digits=3))")
+    println(io, "Split off atom is: $(branch_cluster.split_off_atom[1])  at coordinate $(round.(branch_cluster.split_off_atom[2], digits=3))" )
+    if isa(branch_cluster.branch_atoms, Nothing) == false
+        for atom in branch_cluster.branch_atoms
+            println(io, "Branch atom: $(atom[1])  ", "at coordinate   $(round.(atom[2], digits=3))")
+        end
     end
     println("\n\n Total atoms: $(length(branch_cluster))")
 
@@ -159,6 +190,15 @@ function make_new_central(old_central::centralcluster, branch_cluster::branchclu
     end
     return old_central;
 end
+
+function make_new_central(old_central::centralcluster, branches::Vector{branchcluster})
+
+    for (index, branch) in enumerate(branches)
+        old_central = append!(old_central, branch )
+    end
+    return old_central 
+end
+
 
 function make_xsf(cluster::centralcluster; lattice::Array{<:Any, 2} = [40 0 0 "\\"; 0 40 0 "\\"; 0 0 40 "\\"])
     ##Convert to expected JDFTX ionpos format
