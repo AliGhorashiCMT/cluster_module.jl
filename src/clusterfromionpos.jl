@@ -37,6 +37,6 @@ function ionlattice2central(ionfile::String, latticefile::String; superlattice::
     end
     #println(length(appropriateformationpos))
     [println(appropriate) for appropriate in appropriateformationpos]
-    make_xsf(appropriateformationpos, lattice = [100 0 0 "\\"; 0 100 0 "\\"; 0 0 100 "\\"])
+    make_xsf(appropriateformationpos, lattice = [40 0 0 "\\"; 0 40 0 "\\"; 0 0 40 "\\"])
     #TODO make sure that ending backslashes don't break this coord_new_center
 end
