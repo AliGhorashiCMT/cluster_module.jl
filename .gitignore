@@ -2,5 +2,13 @@ Manifest.toml
 */Manifest.toml
 *.vscode
 *.pdf
+*.ionpos
+*.lattice
+*/*.lattice
+*/*.ionpos
+*/.in
+*.in
+*.out
+*/*.out
 .DS_Store
 

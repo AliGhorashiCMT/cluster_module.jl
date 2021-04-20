@@ -1,12 +1,12 @@
 
-function make_xsf(ionpos::Array{<:Array{<:Any, 1}, 1}; lattice::Array{<:Any, 2} = [40 0 0 "\\"; 0 40 0 "\\"; 0 0 40 "\\"])
+function make_xsf(ionpos::Array{<:Array{<:Any, 1}, 1}; lattice::Array{<:Any, 2} = [1000 0 0 "\\"; 0 1000 0 "\\"; 0 0 1000 "\\"])
     print("making xsf")
     open("temp.in", "w") do io
         write(io, "ion-species GBRV/\$ID_pbesol.uspp")
         writedlm(io, "  ")
-        write(io, "core-overlap-check none")
+        #write(io, "core-overlap-check none")
         write(io, "  ")
-        writedlm(io, "coulomb-interaction Isolated")
+        #write(io, "\ncoulomb-interaction Isolated")
         writedlm(io, "  ")
         write(io, "coords-type Cartesian")
         writedlm(io, "  ")
@@ -36,7 +36,7 @@ function run_jdftx_ni(;filename::AbstractString="temp.in", parallel::Bool=false)
     end
 end
 
-function make_xsf(ionpos::Any, lattice::Array{<:Any, 2} = [20 0 0 "\\"; 0 20 0 "\\"; 0 0 20 "\\"])
+function make_xsf(ionpos::Any, lattice::Array{<:Any, 2} = [1000 0 0 "\\"; 0 1000 0 "\\"; 0 0 1000 "\\"])
     open("temp.in", "w") do io
         write(io, "ion-species GBRV/\$ID_pbesol.uspp")
         writedlm(io, "  ")
