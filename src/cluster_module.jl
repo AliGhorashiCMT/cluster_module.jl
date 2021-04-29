@@ -1,6 +1,6 @@
 module cluster_module
 
-using DelimitedFiles, PyCall
+using DelimitedFiles, PyCall, DocStringExtensions
 
 import Base: + 
 
