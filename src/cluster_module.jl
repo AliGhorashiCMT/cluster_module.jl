@@ -21,6 +21,9 @@ include("cluster_types.jl")
 export make_central_type, make_branch_type, move_branch, make_new_central, @cc_str, @bc_str
 
 include("clusterfromionpos.jl")
-export ionlattice2central
+export ionlattice2central, deleteions
+
+include("rotateions.jl")
+export rotateion
 
 end # module
