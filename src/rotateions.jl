@@ -22,6 +22,17 @@ end
 
 """
 $(TYPEDSIGNATURES)
+"""
+function rotateions(poses::Vector{<:Vector{<:Real}}, perp::Vector{<:Real}, θ::Real)
+    rotatedposes = Vector{Vector{Float64}}()
+    for pos in poses
+        push!(rotatedposes, rotateion(pos, perp, θ))
+    end
+    return rotatedposes
+end
+
+"""
+$(TYPEDSIGNATURES)
 For rotating about z axis 
 """
 function rotateinz(pos::Vector{<:Real}, θ::Real)

@@ -24,6 +24,6 @@ include("clusterfromionpos.jl")
 export ionlattice2central, deleteions
 
 include("rotateions.jl")
-export rotateion
+export rotateion, rotateions
 
 end # module
