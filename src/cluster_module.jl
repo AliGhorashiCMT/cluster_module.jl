@@ -27,5 +27,6 @@ include("rotateions.jl")
 export rotateion, rotateions
 
 include("getangles.jl")
-export getangle
+export getangle, tocartesian, tocartesians, getdist
+
 end # module
