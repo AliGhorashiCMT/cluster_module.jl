@@ -26,4 +26,6 @@ export ionlattice2central, deleteions
 include("rotateions.jl")
 export rotateion, rotateions
 
+include("getangles.jl")
+export getangle
 end # module
