@@ -117,4 +117,24 @@ function createsupercellcluster(ionpos::String, lattice::String,  supermults::Ve
     return supercellions, supercelllattice
 end 
 
+function replaceions(ionpos::String, replacement::String, indxs::Vector{<:Integer}; newfile::Union{String, Nothing}=nothing)
+    isnothing(newfile) && (newfile = ionpos)
+    ionposes = Vector{Vector{Any}}()
+    idx = 1
+    for line in readlines(ionpos)
+        isempty(line) && continue
+        String.(split(line))[1] == "ion" || continue
+        idx ∈ indxs && (push!(ionposes, ["ion", replacement, ionparser(line)..., 1]); idx+=1; continue)
+        idx ∉ indxs && (push!(ionposes, [String.(split(line))[1:2]..., ionparser(line)..., 1 ]); idx+=1; continue)
+    end
+    open(newfile, "w") do io 
+        for ion in ionposes
+            write(io, [string(ionparam)*" " for ionparam in ion]..., "\n")
+        end
+    end
+    return ionposes
+end
 
+function ionparser(line::String)
+    return parse.(Float64, String.(split(line)[3:5]))
+end
