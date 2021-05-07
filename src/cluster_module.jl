@@ -29,4 +29,6 @@ export rotateion, rotateions
 include("getangles.jl")
 export getangle, tocartesian, tocartesians, getdist, extendbond
 
+include("supercell.jl")
+export createsupercell
 end # module
