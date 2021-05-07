@@ -1,6 +1,6 @@
 module cluster_module
 
-using DelimitedFiles, PyCall, DocStringExtensions
+using DelimitedFiles, PyCall, DocStringExtensions, LinearAlgebra
 
 import Base: + 
 
@@ -27,6 +27,6 @@ include("rotateions.jl")
 export rotateion, rotateions
 
 include("getangles.jl")
-export getangle, tocartesian, tocartesians, getdist
+export getangle, tocartesian, tocartesians, getdist, extendbond
 
 end # module

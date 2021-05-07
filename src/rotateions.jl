@@ -22,6 +22,34 @@ end
 
 """
 $(TYPEDSIGNATURES)
+Returns the perpendicular vector to the plane created by three atoms
+"""
+function findperp(v1::Vector{<:Real}, v2::Vector{<:Real}, v3::Vector{<:Real})
+    w1 = (v2-v1)
+    w2 = (v3-v1)
+    cross(w1, w2)
+end
+
+"""
+$(TYPEDSIGNATURES)
+"""
+function extendbond(extendfrom::Vector{<:Real}, extendto::Vector{<:Real}, newlength::Real, ions::Vector{<:Vector{<:Real}})
+    vecextend = extendto - extendfrom
+    vecextend *= newlength./sqrt(sum(vecextend.^2))
+    return [vecextend, [vecextend+extendfrom-extendto+ion for ion in ions]...]
+end
+
+"""
+$(TYPEDSIGNATURES)
+"""
+function extendbond(extendfrom::Vector{<:Real}, extendto::Vector{<:Real}, newlength::Real)
+    vecextend = extendto - extendfrom
+    vecextend *= newlength./sqrt(sum(vecextend.^2))
+    return vecextend+extendto
+end
+
+"""
+$(TYPEDSIGNATURES)
 """
 function rotateions(poses::Vector{<:Vector{<:Real}}, perp::Vector{<:Real}, θ::Real)
     rotatedposes = Vector{Vector{Float64}}()
