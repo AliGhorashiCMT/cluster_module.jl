@@ -40,6 +40,10 @@ end
 
 """
 $(TYPEDSIGNATURES)
+Returns the ionic position provided in lattice coordinates in cartesian coordinates. 
+
+`lattype` denotes the lattice type (lattice vectors being columns or rows of provided 3x3 matrix)- with jdftx being the default. 
+
 """
 function tocartesian(ion::Vector{<:Real}, lattice::Array{<:Real, 2}; lattype::Symbol=:jdftx)
     if lattype == :jdftx
@@ -55,6 +59,9 @@ end
 
 """
 $(TYPEDSIGNATURES)
+Returns the ionic positions provided in lattice coordinates in cartesian coordinates. 
+
+`lattype` denotes the lattice type (lattice vectors being columns or rows of provided 3x3 matrix)- with jdftx being the default. 
 """
 function tocartesians(ions::Vector{<:Vector{<:Real}}, lattice::Array{<:Real, 2}; lattype::Symbol=:jdftx)
     cartions = Vector{Vector{Float64}}()
@@ -66,6 +73,12 @@ end
 
 """
 $(TYPEDSIGNATURES)
+Returns the provided ionic positions (given in the form of an ionic positions file by JDFTX conventions)
+in cartesian coordinates. The lattice file is also read from a lattice file assumed to be written in JDFTX conventions. 
+
+`ionpos` : A JDFTX ionic positions file
+
+`lattice` : A JDFTX lattice file
 """
 function tocartesians(ionpos::String, lattice::String)
     readions = Vector{Vector{Float64}}()

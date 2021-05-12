@@ -44,7 +44,7 @@ include("clusterfromionpos.jl")
 export ionlattice2central, deleteions
 
 include("rotateions.jl")
-export rotateion, rotateions
+export rotateion, rotateions, findperp, rotateinz, extendbond
 
 include("getangles.jl")
 export getangle, tocartesian, tocartesians, getdist, extendbond
