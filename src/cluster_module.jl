@@ -5,10 +5,19 @@ using DelimitedFiles, PyCall, DocStringExtensions, LinearAlgebra
 import Base: + 
 
 const np = PyNULL()
+const ase = PyNULL()
+const ase_atoms = PyNULL()
+const atoms = PyNULL()
 export np
+export ase
+export ase_atoms
+export atoms
 # ---------------------------------------------------------------------------------------- #
 function __init__()
     copy!(np, pyimport_conda("numpy", "numpy"))
+    copy!(ase, pyimport_conda("ase", "ase", "conda-forge"))
+    copy!(ase_atoms, pyimport_conda("ase.atoms", "ase", "conda-forge"))
+    copy!(atoms, ase_atoms.Atoms )
 end
 
 include("make_cluster.jl")
