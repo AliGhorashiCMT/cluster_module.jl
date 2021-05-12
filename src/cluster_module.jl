@@ -12,10 +12,11 @@ const fcc = PyNULL()
 const diamond = PyNULL()
 const bcc = PyNULL()
 const ase_view = PyNULL()
+const ase_write = PyNULL()
 export np
 export ase
 export ase_atoms
-export atoms, fcc, diamond, bcc, ase_view
+export atoms, fcc, diamond, bcc, ase_view, ase_write
 
 # ---------------------------------------------------------------------------------------- #
 function __init__()
@@ -27,6 +28,7 @@ function __init__()
     copy!(bcc, pyimport_conda("ase.lattice.cubic", "ase", "conda-forge").BodyCenteredCubic)
     copy!(atoms, ase_atoms.Atoms )
     copy!(ase_view, pyimport_conda("ase.visualize","ase", "conda-forge").view)
+    copy!(ase_write, pyimport_conda("ase.io", "ase", "conda-forge").write)
 end
 
 include("make_cluster.jl")
