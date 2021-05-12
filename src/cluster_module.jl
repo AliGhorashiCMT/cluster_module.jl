@@ -50,5 +50,5 @@ include("getangles.jl")
 export getangle, tocartesian, tocartesians, getdist, extendbond
 
 include("supercell.jl")
-export createsupercell, createsupercellcluster, replaceions
+export createsupercell, createsupercellcluster, replaceions, ionparser
 end # module

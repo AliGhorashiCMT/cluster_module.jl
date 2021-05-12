@@ -1,5 +1,13 @@
 """
 $(TYPEDSIGNATURES)
+
+`ionpos` : Name of JDFTX ionic positions file 
+
+`lattice` : Name of JDFTX lattice file 
+
+`supermults` : Vector denoting the supercell multiplicity
+
+`writefile` : If nothing indicates that the supercell is not to be written to a file. If a string, is taken to be the name of a file to which the supercell will be written.
 """
 function createsupercell(ionpos::String, lattice::String,  supermults::Vector{<:Real}; writefile::Union{Nothing, String}=nothing)
     m1, m2, m3 = supermults
@@ -50,8 +58,22 @@ end
 
 """
 $(TYPEDSIGNATURES)
+
+`ionpos` : Name of JDFTX ionic positions file
+
+`lattice` : Name of JDFTX lattice file
+
+`supermults` : Vector indicating supercell multiplicity
+
+`writefile` : If nothing- indicates cluster will not be written. If a string, indicates name of file for cluster to be written to. 
+
+`removecriteria` : Criteria for removing atoms from the cluster. First component of tuple is the index of the atom from which distances will be measured. 
+                   Second component of tuple is the maximum distance from the aforementioned atom- this is the criteria for removing atoms from the cluster. 
+
+`removeindividual` : Indices of individual atoms to be removed.
 """
-function createsupercellcluster(ionpos::String, lattice::String,  supermults::Vector{<:Real}; writefile::Union{Nothing, String}=nothing, removecriteria::Union{Tuple{<:Integer, <:Real}, Nothing}=nothing, removeindividual::Union{Vector{<:Integer}, Nothing}=nothing)
+function createsupercellcluster(ionpos::String, lattice::String,  supermults::Vector{<:Real}; writefile::Union{Nothing, String}=nothing,
+    removecriteria::Union{Tuple{<:Integer, <:Real}, Nothing}=nothing, removeindividual::Union{Vector{<:Integer}, Nothing}=nothing)
     m1, m2, m3 = supermults
     readions = Vector{Vector{Real}}()
     ionids = Vector{Vector{Any}}()
@@ -117,6 +139,17 @@ function createsupercellcluster(ionpos::String, lattice::String,  supermults::Ve
     return supercellions, supercelllattice
 end 
 
+"""
+$(TYPEDSIGNATURES)
+
+`ionpos` : Name of the ionic positions file
+
+`replacement` : Name of the replacement ion
+
+`indxs` : Indices of ions to be replaced
+
+`newfile` : A new file to which the new ion IDs will be written (if nothing- the ions are written to ionpos)
+"""
 function replaceions(ionpos::String, replacement::String, indxs::Vector{<:Integer}; newfile::Union{String, Nothing}=nothing)
     isnothing(newfile) && (newfile = ionpos)
     ionposes = Vector{Vector{Any}}()
@@ -135,6 +168,20 @@ function replaceions(ionpos::String, replacement::String, indxs::Vector{<:Intege
     return ionposes
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+This method is provided for user ease in parsing JDFTX ionic positions files. 
+The typical JDFTX ionic position is given in a form like: 
+
+`ion C 0 1/3 2/3 0`
+
+This method parses the line from the third to the fifth components and returns the associated vector of Floats.
+
+
+`line` : A string of a JDFTX ionic position 
+
+"""
 function ionparser(line::String)
     return parse.(Float64, String.(split(line)[3:5]))
 end
