@@ -1,5 +1,13 @@
 """
 $(TYPEDSIGNATURES)
+
+Returns the angle between the vectors formed by `v1` and `v2` where 
+
+`v1` = `branch1` - `centeratom`
+
+and 
+
+`v2` = `branch2` - `centeratom`
 """
 function getangle(centeratom::Vector{<:Real}, branch1::Vector{<:Real}, branch2::Vector{<:Real})
     #Take dot product of the two displacement vectors and divide by the lengths 
@@ -14,6 +22,9 @@ end
 
 """
 $(TYPEDSIGNATURES)
+
+Returns the distance between two atoms given in cartesian coordinates. 
+
 """
 function getdist(centeratom::Vector{<:Real}, branch::Vector{<:Real})
     #Take dot product of the two displacement vectors and divide by the lengths 
@@ -24,6 +35,18 @@ end
 
 """
 $(TYPEDSIGNATURES)
+
+Returns the distance between two ions read from JDFTX formatted files
+
+`ionpos` : Name of JDFTX ionic positions file
+
+`lattice` : Name of JDFTX lattice file
+
+`numc` : Index of first ion
+
+`numb` : Index of second ion 
+
+Note that the distances are likely returned in Bohr since the the JDFTX lattice is likely written in atomic units
 """
 function getdist(ionpos::String, lattice::String, numc::Integer, numb::Integer)
     cartesiancoords = tocartesians(ionpos, lattice)
@@ -32,6 +55,20 @@ end
 
 """
 $(TYPEDSIGNATURES)
+
+Returns the angle between `v1` and `v2` where `v1` is the vector connecting `numc` and `numb1`
+and `v2` is the vector connecting `numc` and `numb2`
+
+`ionpos` : Name of JDFTX formatted ionic positions file
+
+`lattice` : Name of JDFTX formatted lattice file 
+
+`numc` : Index of the center atom
+
+`numb1` : Index of the first branch atom
+
+`numb2` : Index of the second branch atom
+
 """
 function getangle(ionpos::String, lattice::String, numc::Integer, numb1::Integer, numb2::Integer)
     cartesiancoords = tocartesians(ionpos, lattice)
