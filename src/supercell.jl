@@ -72,7 +72,7 @@ $(TYPEDSIGNATURES)
 
 `removeindividual` : Indices of individual atoms to be removed.
 """
-function createsupercellcluster(ionpos::String, lattice::String,  supermults::Vector{<:Real}; writefile::Union{Nothing, String}=nothing,
+function createsupercellcluster(ionpos::AbstractString, lattice::AbstractString,  supermults::Vector{<:Real}; writefile::Union{Nothing, AbstractString}=nothing,
     removecriteria::Union{Tuple{<:Integer, <:Real}, Nothing}=nothing, removeindividual::Union{Vector{<:Integer}, Nothing}=nothing)
     m1, m2, m3 = supermults
     readions = Vector{Vector{Real}}()
@@ -150,7 +150,7 @@ $(TYPEDSIGNATURES)
 
 `newfile` : A new file to which the new ion IDs will be written (if nothing- the ions are written to ionpos)
 """
-function replaceions(ionpos::String, replacement::String, indxs::Vector{<:Integer}; newfile::Union{String, Nothing}=nothing)
+function replaceions(ionpos::AbstractString, replacement::AbstractString, indxs::Vector{<:Integer}; newfile::Union{AbstractString, Nothing}=nothing)
     isnothing(newfile) && (newfile = ionpos)
     ionposes = Vector{Vector{Any}}()
     idx = 1
@@ -182,6 +182,6 @@ This method parses the line from the third to the fifth components and returns t
 `line` : A string of a JDFTX ionic position 
 
 """
-function ionparser(line::String)
+function ionparser(line::AbstractString)
     return parse.(Float64, String.(split(line)[3:5]))
 end

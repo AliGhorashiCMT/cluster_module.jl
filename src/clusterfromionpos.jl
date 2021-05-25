@@ -2,7 +2,7 @@
 """
 $(TYPEDSIGNATURES)
 """
-function ionlattice2central(ionfile::String, latticefile::String; superlattice::Vector{<:Integer}=[0, 0, 0])
+function ionlattice2central(ionfile::AbstractString, latticefile::AbstractString; superlattice::Vector{<:Integer}=[0, 0, 0])
     ionic_positions = np.loadtxt(ionfile, usecols=[2, 3, 4])
     initialnumions = np.shape(ionic_positions)[1]
     lattice_vectors = np.loadtxt(latticefile, skiprows=1, usecols=[0, 1, 2])
@@ -33,7 +33,7 @@ function ionlattice2central(ionfile::String, latticefile::String; superlattice::
     make_xsf(appropriateformationpos, lattice = [40 0 0 "\\"; 0 40 0 "\\"; 0 0 40 "\\"])
 end
 
-function deleteions(ionfile::String, deletedions::Vector{<:Integer})
+function deleteions(ionfile::AbstractString, deletedions::Vector{<:Integer})
     ionic_positions = np.loadtxt(ionfile, usecols=[2, 3, 4])
     iontypes = Vector{String}()
     for ionid in readlines(ionfile)
