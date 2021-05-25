@@ -17,5 +17,5 @@ julia> using cluster_module
 
 [ci-status-img]:   https://github.com/AliGhorashiCMT/cluster_module.jl/workflows/CI/badge.svg
 [ci-status-url]:   https://github.com/AliGhorashiCMT/cluster_module.jl/actions
-[codecov-img]: https://codecov.io/gh/AliGhorashiCMT/Jcluster_module.jl/branch/main/graph/badge.svg
+[codecov-img]: https://codecov.io/gh/AliGhorashiCMT/cluster_module.jl/branch/main/graph/badge.svg
 [codecov-url]: https://app.codecov.io/gh/AliGhorashiCMT/cluster_module.jl
