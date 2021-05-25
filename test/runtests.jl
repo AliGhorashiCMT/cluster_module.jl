@@ -15,3 +15,8 @@ end
     a, b, c = rand(3), rand(3), rand(3)
     sum(findperp(a, b, c).*(a-b))
 end
+
+@testset "Obtaining angles and distances" begin
+    getangle([0, 0, 0], [1, 0, 0], [-1/2, sqrt(3)/2, 0])*180/π ≈ 120    
+    getdist([0, 0, 0], [√3/2, 1/2, 0]) ≈ 1
+end

@@ -48,7 +48,7 @@ Returns the distance between two ions read from JDFTX formatted files
 
 Note that the distances are likely returned in Bohr since the the JDFTX lattice is likely written in atomic units
 """
-function getdist(ionpos::String, lattice::String, numc::Integer, numb::Integer)
+function getdist(ionpos::AbstractString, lattice::AbstractString, numc::Integer, numb::Integer)
     cartesiancoords = tocartesians(ionpos, lattice)
     return getdist(cartesiancoords[numc], cartesiancoords[numb])
 end
@@ -70,7 +70,7 @@ and `v2` is the vector connecting `numc` and `numb2`
 `numb2` : Index of the second branch atom
 
 """
-function getangle(ionpos::String, lattice::String, numc::Integer, numb1::Integer, numb2::Integer)
+function getangle(ionpos::AbstractString, lattice::AbstractString, numc::Integer, numb1::Integer, numb2::Integer)
     cartesiancoords = tocartesians(ionpos, lattice)
     getangle(cartesiancoords[numc], cartesiancoords[numb1], cartesiancoords[numb2])
 end
@@ -117,7 +117,7 @@ in cartesian coordinates. The lattice file is also read from a lattice file assu
 
 `lattice` : A JDFTX lattice file
 """
-function tocartesians(ionpos::String, lattice::String)
+function tocartesians(ionpos::AbstractString, lattice::AbstractString)
     readions = Vector{Vector{Float64}}()
     latt = Array{Float64, 2}(undef, (3, 3))
     for line in readlines(ionpos)
