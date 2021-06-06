@@ -40,3 +40,9 @@ end
     i, l = createsupercellcluster("alpha.ionpos", "alpha.lattice", [3, 3, 2], writefile="alpha.cluster.in")
     @test length(i) == 162
 end
+
+@testset "Extending Bonds Tests" begin
+    newion = extendbond([1/4, 1/4, 1/4], [3/4, 3/4, 3/4], 5)
+    isapprox(sqrt(sum((newion-[0.25, 0.25, 0.25]).^2 )), 5, atol=1e-3)
+end
+
