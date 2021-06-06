@@ -72,7 +72,7 @@ $(TYPEDSIGNATURES)
 
 `removeindividual` : Indices of individual atoms to be removed.
 """
-function createsupercellcluster(ionpos::AbstractString, lattice::AbstractString,  supermults::Vector{<:Real}; writefile::Union{Nothing, AbstractString}=nothing,
+function createsupercellcluster(ionpos::AbstractString, lattice::AbstractString, supermults::Vector{<:Real}; writefile::Union{Nothing, AbstractString}=nothing,
     removecriteria::Union{Tuple{<:Integer, <:Real}, Nothing}=nothing, removeindividual::Union{Vector{<:Integer}, Nothing}=nothing)
     m1, m2, m3 = supermults
     readions = Vector{Vector{Real}}()
