@@ -24,3 +24,19 @@ end
 @testset "Parsing JDFTX input files" begin
     @test ionparser("ion C 0 0.3333333 0 1") ≈ [0, 0.3333333, 0]
 end
+
+@testset "Creating Supercells" begin
+    #We use a model for alpha quartz. Note that the ionpos files are interpreted as being in the lattice basis
+    #Lattice is also written in Bohr
+    #We make a supercell of mult 2 2 2
+    i, l = createsupercell("alpha.ionpos", "alpha.lattice", [2, 2, 2], writefile="alpha.supercell.in")
+    @test length(i) == 9*8 #Check that correct number of ions are being produced
+end
+
+@testset "Creating a cluster from a supercell" begin
+    #We make a cluster model for a self trapped hole defect in alpha quartz silica
+    i, l = createsupercellcluster("alpha.ionpos", "alpha.lattice", [3, 3, 2], writefile="alpha.cluster.in", removecriteria=(157, 10.2))
+    @test length(i) < 3*3*2*9
+    i, l = createsupercellcluster("alpha.ionpos", "alpha.lattice", [3, 3, 2], writefile="alpha.cluster.in")
+    @test length(i) == 162
+end

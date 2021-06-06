@@ -33,20 +33,6 @@ function ionlattice2central(ionfile::AbstractString, latticefile::AbstractString
     make_xsf(appropriateformationpos, lattice = [40 0 0 "\\"; 0 40 0 "\\"; 0 0 40 "\\"])
 end
 
-function deleteions(ionfile::AbstractString, deletedions::Vector{<:Integer})
-    ionic_positions = np.loadtxt(ionfile, usecols=[2, 3, 4])
-    iontypes = Vector{String}()
-    for ionid in readlines(ionfile)
-        push!(iontypes, string(split(ionid)[2]))
-    end
-    revised_ionic_positions = Vector{Vector{Any}}()
-    for (index, ion) in enumerate(eachrow(ionic_positions))
-            index ∈ deletedions && continue
-            push!(revised_ionic_positions, ["ion", iontypes[index], ion..., 1])
-            println(index)
-    end
-   make_xsf(revised_ionic_positions, lattice = [40 0 0 "\\"; 0 40 0 "\\"; 0 0 40 "\\"])
-end
 
 function ionlattice2central(basefile::String, ; superlattice::Vector{<:Integer}=[0, 0, 0])
     ionlattice2central(basefile*".ionpos", basefile*".lattice", superlattice=superlattice)

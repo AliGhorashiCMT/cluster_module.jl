@@ -9,7 +9,7 @@ $(TYPEDSIGNATURES)
 
 `writefile` : If nothing indicates that the supercell is not to be written to a file. If a string, is taken to be the name of a file to which the supercell will be written.
 """
-function createsupercell(ionpos::String, lattice::String,  supermults::Vector{<:Real}; writefile::Union{Nothing, String}=nothing)
+function createsupercell(ionpos::AbstractString, lattice::AbstractString,  supermults::Vector{<:Real}; writefile::Union{Nothing, AbstractString}=nothing)
     m1, m2, m3 = supermults
     readions = Vector{Vector{Real}}()
     ionids = Vector{Vector{Any}}()
@@ -167,6 +167,82 @@ function replaceions(ionpos::AbstractString, replacement::AbstractString, indxs:
     end
     return ionposes
 end
+
+
+"""
+$(TYPEDSIGNATURES)
+Delete ions from an input file or an ionpos file. 
+
+"""
+function deleteions(ionfile::AbstractString, deletedions::Vector{<:Integer}, isionpos::Bool=true; writetofile::Bool=false)
+    ionfile1 = if isionpos
+        ionfile
+    else
+        tempfile = "temp.ionpos"
+        ionlines = Vector{String}()
+        for line in readlines(ionfile)
+            contains(line, "ion") || continue
+            contains(line, "ion-species" ) && continue #Don't look at pseudopotential specification lines
+            push!(ionlines, line)
+        end
+        open(tempfile, "w") do io
+            for line in ionlines
+                write(io, line, "\n")
+            end
+        end
+        tempfile
+    end
+    ionic_positions = np.loadtxt(ionfile1, usecols=[2, 3, 4])
+    iontypes = Vector{String}()
+    for ionid in readlines(ionfile1)
+        push!(iontypes, string(split(ionid)[2]))
+    end
+    revised_ionic_positions = Vector{Vector{Any}}()
+    for (index, ion) in enumerate(eachrow(ionic_positions))
+            index ∈ deletedions && continue
+            push!(revised_ionic_positions, ["ion", iontypes[index], ion..., 1])
+            println(index)
+    end
+    try
+        run(`rm $(tempfile)`)
+    catch
+    end
+
+    if writetofile
+        if isionpos
+            open(ionfile, "w") do io
+                for line in revised_ionic_positions
+                    for l in line
+                        write(io, string(l), "\t")
+                    end
+                    write(io, "\n")
+                end
+            end
+        else    
+            open(ionfile, "w") do io
+                for line in revised_ionic_positions
+                    for l in line
+                        write(io, string(l), "\t")
+                    end
+                    write(io, "\n")
+                end
+                write(io, "ion-species GBRV/\$ID_pbesol.uspp \n"  )
+                write(io, "coords-type Cartesian\n")
+                supercelllatticeCART = [50 0 0; 0 50 0; 0 0 50]
+
+                write(io, "\n\n")
+                write(io, "lattice\\ \n")
+    
+                for (index, row) in enumerate(eachrow(supercelllatticeCART))
+                    write(io, [" "*string(r) for r in collect(row) ]...)
+                    index < 3 ? write(io, " \\ \n") : write(io, "\n")
+                end        
+            end
+        end
+    end
+    return revised_ionic_positions
+end
+
 
 """
 $(TYPEDSIGNATURES)
