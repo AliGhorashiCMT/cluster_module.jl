@@ -73,7 +73,7 @@ function extendbond(extendfrom::Vector{<:Real}, extendto::Vector{<:Real},
 
     vecextend = extendto - extendfrom
     vecextend *= newlength./sqrt(sum(vecextend.^2))
-    return [vecextend+extendto, [vecextend+extendfrom-extendto+ion for ion in ions]...]
+    return [vecextend+extendfrom, [vecextend+extendfrom-extendto+ion for ion in ions]...]
 end
 
 """
