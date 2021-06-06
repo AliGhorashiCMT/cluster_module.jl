@@ -13,6 +13,8 @@ Manifest.toml
 *.xsf
 */*.xsf
 .DS_Store
+!test/*
+!test/*
 
 src/temp2
 Ag.png
